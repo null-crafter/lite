@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+WLR_MONITOR=`wlr-randr|head -n 1|cut -d " " -f1`
+MONITOR="${DEFAULT_MONITOR:-${WLR_MONITOR}}"
+
+
+SCREEN_ON_COMMAND="wlr-randr --output $MONITOR --on"
+SCREEN_OFF_COMMAND="wlr-randr --output $MONITOR --off"
+SCREEN_TOGGLE_COMMAND="wlr-randr --output $MONITOR --toggle"
+echo $MONITOR
+display_help() {
+	echo "$0: [-htfa]"
+	echo "-t: screen on"
+	echo "-f: screen off"
+	echo "-a: screen toggle"
+}
+while getopts ":htfa" option; do
+   case $option in
+      h)
+         display_help
+         exit;;
+      a)
+ 	 echo "$SCREEN_TOGGLE_COMMAND"
+ 	 sh -c "$SCREEN_TOGGLE_COMMAND"
+	 exit;;
+      t)
+	 echo "$SCREEN_ON_COMMAND"
+	 sh -c "$SCREEN_ON_COMMAND"
+         exit;;
+      f)
+	 echo "$SCREEN_OFF_COMMAND"
+	 sh -c "$SCREEN_OFF_COMMAND"
+         exit;;
+
+     \?)
+         echo "Error: Invalid option"
+	display_help
+         exit;;
+   esac
+done
